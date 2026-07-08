@@ -8,11 +8,15 @@ a formal standards body).
 
 Extracted from `kotoba-lang/kasane` (kasane.tiff, ADR-2606272100). R0 extracts
 IFD0 metadata (dims/bits-per-sample/compression/photometric) and decodes
-pixel strips for none/LZW/PackBits compression; deflate-compressed strips are
-left opaque (no external dependency wired in this repo). Carries its own
-small byte-cursor and LZW/PackBits primitives rather than depending on
-another kotoba-lang repo — TIFF's LZW variant (MSB-first, early code-width
-change) differs from GIF's, so these aren't shared.
+pixel strips for none/LZW/PackBits/Deflate compression (Deflate wired to
+[`org-ietf-deflate`](https://github.com/kotoba-lang/org-ietf-deflate) as of
+2026-07-08 — TIFF's "Adobe Deflate" strips are zlib-wrapped, the same codec
+PNG/ZIP/WOFF/PDF share; validated against a real Pillow-written
+`tiff_deflate` file, see `test/tiff/deflate_test.clj`). CCITT/JPEG-in-TIFF
+strips stay opaque. Carries its own small byte-cursor and LZW/PackBits
+primitives rather than depending on another kotoba-lang repo — TIFF's LZW
+variant (MSB-first, early code-width change) differs from GIF's, so these
+aren't shared.
 
 ## Usage
 

@@ -3,11 +3,15 @@
    themselves be offsets, so this is a small hand parser (byte order
    auto-detected), not a linear grammar. R0 extracts IFD0 metadata
    (dims/bps/compression/photometric); pixel strips are decoded for
-   none/lzw/packbits compression, left as blob pointers for others.
-   Extracted from kotoba-lang/kasane (kasane.tiff, ADR-2606272100) as
-   `org-adobe-tiff` — TIFF 6.0 is Adobe's published spec."
+   none/lzw/packbits/deflate compression, left as blob pointers for
+   others (CCITT/JPEG-in-TIFF). Extracted from kotoba-lang/kasane
+   (kasane.tiff, ADR-2606272100) as `org-adobe-tiff` — TIFF 6.0 is
+   Adobe's published spec. Deflate support (2026-07-08) wired to
+   org-ietf-deflate — validated against a real Pillow-written
+   tiff_deflate strip (see test/tiff/deflate_test.clj)."
   (:require [tiff.bytes :as b]
-            [tiff.codec :as codec]))
+            [tiff.codec :as codec]
+            [deflate.core :as deflate]))
 
 (def ^:private tag-names
   {256 :image-width 257 :image-height 258 :bits-per-sample 259 :compression
@@ -47,10 +51,9 @@
 
 (defn pixels
   "Decode TIFF image samples = concatenated strips, decompressed per the
-   Compression tag. R0: predictor=1 (none) only; single sample format.
-   Deflate-compressed strips (Compression 8/32946) are left opaque (no
-   deflate dependency in this repo). Returns a vector of unsigned sample
-   bytes."
+   Compression tag (none/LZW/PackBits/Deflate). R0: predictor=1 (none)
+   only; single sample format; CCITT/JPEG-in-TIFF strips stay opaque.
+   Returns a vector of unsigned sample bytes."
   [data]
   (let [bv   (vec data)
         big? (= [0x4D 0x4D] (subvec bv 0 2))
@@ -76,8 +79,9 @@
     (vec (mapcat (fn [o l]
                    (let [strip (subvec bv o (+ o l))]
                      (case comp
-                       1     (vec strip)                                         ; none
-                       5     (codec/lzw strip)
-                       32773 (codec/packbits strip)
-                       (vec strip))))                                            ; deflate/other: opaque
+                       1           (vec strip)                                   ; none
+                       5           (codec/lzw strip)
+                       32773       (codec/packbits strip)
+                       (8 32946)   (deflate/inflate strip)                       ; zlib-wrapped (TIFF Adobe Deflate)
+                       (vec strip))))                                            ; other (CCITT/JPEG): opaque
                  offs lens))))
