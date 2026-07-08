@@ -1,0 +1,21 @@
+(ns tiff.lzw-test
+  "LZW validated against REAL libtiff-encoded fixtures with ground-truth
+   pixels recorded via Pillow. Bit-exact: MSB, early-change, including a
+   96x40 image crossing the 9→10→11→12-bit code-width boundaries."
+  (:require [clojure.test :refer [deftest is testing]]
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [tiff.core :as tiff]))
+
+(defn- rd [p] (mapv #(bit-and (int %) 0xff)
+                    (with-open [in (io/input-stream (io/resource p))] (.readAllBytes in))))
+(defn- expected [p] (edn/read-string (slurp (io/resource p))))
+
+(deftest tiff-lzw-pixels
+  (testing "small 8x4 grayscale LZW vs libtiff ground truth"
+    (is (= (get-in (expected "tiff/fixtures/expected.edn") [:tiff-gray :samples])
+           (tiff/pixels (rd "tiff/fixtures/lzw_gray.tif")))))
+  (testing "96x40 LZW crossing 9→10→11→12-bit code-width boundaries (bit-exact)"
+    (let [exp (get-in (expected "tiff/fixtures/expected_big.edn") [:tiff :samples])]
+      (is (= 3840 (count exp)))
+      (is (= exp (tiff/pixels (rd "tiff/fixtures/lzw_big.tif")))))))
