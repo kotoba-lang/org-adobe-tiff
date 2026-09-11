@@ -23,7 +23,7 @@
 
 ;; TIFF LZW (Compression=5) = MSB-first bit order, early code-width change
 ;; (widen when next-free-code == 2^width - 1). Locked against real
-;; libtiff-encoded fixtures — see test/tiff/lzw_test.clj.
+;; libtiff-encoded fixtures — see test/tiff/lzw_test.cljk.
 (defn- lzw-reader [data]
   {:data (vec data) :len (count data) :bp (atom 0) :bi (atom 0)})
 
