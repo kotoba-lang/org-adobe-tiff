@@ -8,7 +8,7 @@
    (kasane.tiff, ADR-2606272100) as `org-adobe-tiff` — TIFF 6.0 is
    Adobe's published spec. Deflate support (2026-07-08) wired to
    org-ietf-deflate — validated against a real Pillow-written
-   tiff_deflate strip (see test/tiff/deflate_test.clj)."
+   tiff_deflate strip (see test/tiff/deflate_test.cljk)."
   (:require [tiff.bytes :as b]
             [tiff.codec :as codec]
             [deflate.core :as deflate]))
