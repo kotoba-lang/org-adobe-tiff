@@ -1,4 +1,4 @@
-#!/usr/bin/env bb
+#!/usr/bin/env kbb
 ;; edn-datomize.bb — EDN → Datomic/Datascript tx-data 変換ツール。
 ;; (adapted for org-adobe-tiff from com-junkawasaki/root's manifest/edn-datomize.bb;
 ;;  schema-path points at the repo's own root, not a manifest/ subdir.)

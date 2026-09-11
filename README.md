@@ -31,5 +31,5 @@ aren't shared.
 ## Test
 
 ```sh
-clojure -M:test
+kbb -M:test
 ```
