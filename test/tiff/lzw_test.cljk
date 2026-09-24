@@ -3,7 +3,7 @@
    pixels recorded via Pillow. Bit-exact: MSB, early-change, including a
    96x40 image crossing the 9→10→11→12-bit code-width boundaries."
   (:require [kotoba.test :refer [deftest is testing]]
-            [clojure.edn :as edn]
+            [kotoba.lang.edn :as edn]
             [clojure.java.io :as io]
             [tiff.core :as tiff]))
 
