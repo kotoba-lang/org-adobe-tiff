@@ -4,7 +4,7 @@
    This capability was deliberately left opaque when TIFF was first
    extracted from kasane (no deflate dependency at the time) — wired to
    org-ietf-deflate now that it exists."
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [clojure.java.io :as io]
             [tiff.core :as tiff]))
 
