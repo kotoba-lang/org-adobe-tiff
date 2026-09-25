@@ -34,7 +34,7 @@
 ;;     out-of-range read.
 
 (ns tiff.header-kotoba-parity-test
-  (:require [clojure.java.io :as io]
+  (:require [kotoba.io :as io]
             [kotoba.test :refer [deftest is testing]]
             [kotoba.compiler.core :as compiler]
             [kotoba.kir :as ir]
@@ -91,7 +91,7 @@
 ;; --- parity: real files --------------------------------------------------------
 
 (deftest guest-source-is-present
-  (is (.exists guest-file) (str "kotoba object not found at " guest-file)))
+  (is (io/exists? guest-file) (str "kotoba object not found at " guest-file)))
 
 (deftest the-byte-order-of-a-real-file-agrees-with-the-oracle
   (doseq [name ["lzw_gray.tif" "lzw_big.tif" "pillow_deflate.tif"]]
