@@ -4,7 +4,7 @@
    96x40 image crossing the 9→10→11→12-bit code-width boundaries."
   (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.lang.edn :as edn]
-            [clojure.java.io :as io]
+            [kotoba.io :as io]
             [tiff.core :as tiff]))
 
 (defn- rd [p] (mapv #(bit-and (int %) 0xff)
