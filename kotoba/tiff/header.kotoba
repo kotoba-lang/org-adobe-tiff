@@ -146,7 +146,7 @@
           b1 (at-i64 bytes 1)
           ;; Folded to `if` all the way down: `=` in a branch position
           ;; evaluates to i64, and a `document-bool` fed one passes
-          ;; `amu check` and traps when the export RUNS (CLAUDE.md,
+          ;; `amu check` and traps when the export RUNS (AGENTS.md,
           ;; 2026-08-31 -- and this file hit it on the MM path only,
           ;; because the II path never reached the constructor).
           little (if (= b0 (ii)) (if (= b1 (ii)) true false) false)
